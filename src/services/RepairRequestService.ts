@@ -1,5 +1,5 @@
 import axios from "../api/axios";
-import type { RepairRequestFormData } from "../schemas/RepairRequestShema";
+import type { RepairRequestFormData } from "../schemas/repairRequestShema";
 
 
 

@@ -1,22 +1,21 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import RepairRequest from "../pages/RepairRequestPage";
-import App from "../App";
+import { Routes, Route } from "react-router-dom";
 
-function AppRoutes() {
-    return (
-        <BrowserRouter>
-            <Routes>
-                <Route 
-                path="/" 
-                element={<App />} />
+import { RepairRequestForm } from "../components/repair/RepairRequestForm";
+import RepairRequestSuccess from "../pages/RepairRequestSuccess";
+import { ROUTES } from "./ROUTES";
 
-                <Route
-                    path="/repair-request"
-                    element={<RepairRequest />}
-                />
-            </Routes>
-        </BrowserRouter>
-    );
+export default function AppRoutes() {
+  return (
+    <Routes>
+      <Route
+        path={ROUTES.HOME}
+        element={<RepairRequestForm />}
+      />
+
+      <Route
+        path={ROUTES.REPAIR_REQUEST_SUCCESS}
+        element={<RepairRequestSuccess />}
+      />
+    </Routes>
+  );
 }
-
-export default AppRoutes;

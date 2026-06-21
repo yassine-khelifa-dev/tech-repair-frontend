@@ -1,17 +1,20 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { repairRequestSchema, type RepairRequestFormData } from "../../schemas/repairRequestShema";
+import {
+  repairRequestSchema,
+  type RepairRequestFormData,
+} from "../../schemas/repairRequestShema";
 import createRepairRequest from "../../services/RepairRequestService";
 import DeviceSelectorForm from "../device/DeviceSelectorForm";
-
-
-
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export function RepairRequestForm() {
   const {
     register,
     handleSubmit,
     setValue,
+    reset,
     formState: { errors },
   } = useForm<RepairRequestFormData>({
     resolver: zodResolver(repairRequestSchema),
@@ -22,16 +25,37 @@ export function RepairRequestForm() {
       imei: "",
       sn: "",
       issue_description: "",
-      device_model_id: -1,
+      device_model_id: null,
       option_ids: [],
       images_device: [],
     },
   });
 
-  async function submit(data: RepairRequestFormData) {
-    const response = await createRepairRequest(data);
+  const [loading, setLoading] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
+  const navigate = useNavigate();
 
-    console.log(response);
+  async function submit(data: RepairRequestFormData) {
+    try {
+      setLoading(true);
+      setServerError(null);
+      await createRepairRequest(data);
+      reset();
+      setSuccess(true);
+      navigate("/repair-request/success");
+    } catch (error) {
+      if (error.response?.status === 422) {
+        setServerError(error.response.data.message);
+        console.error(error.response.data.message);
+        return;
+      }
+
+      setServerError("Unable to send repair request");
+      console.error("h", error);
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -39,6 +63,18 @@ export function RepairRequestForm() {
       onSubmit={handleSubmit(submit)}
       className="mx-auto max-w-4xl space-y-6 p-6"
     >
+      {serverError && (
+        <div className="rounded-lg bg-red-100 p-3 text-red-700">
+          {serverError}
+        </div>
+      )}
+
+      {success && (
+        <div className="rounded-lg bg-green-100 p-3 text-green-700">
+          Repair request sent successfully.
+        </div>
+      )}
+
       <DeviceSelectorForm
         onModelChange={(modelId, optionIds) => {
           setValue("device_model_id", modelId ?? -1, {
@@ -177,9 +213,10 @@ export function RepairRequestForm() {
 
       <button
         type="submit"
-        className="rounded-lg bg-black px-5 py-2.5 text-sm font-semibold text-white hover:bg-gray-800"
+        disabled={loading}
+        className="bg-black text-white px-4 py-2 rounded disabled:opacity-50"
       >
-        Send repair request
+        {loading ? "Sending..." : "Send repair request"}
       </button>
     </form>
   );
