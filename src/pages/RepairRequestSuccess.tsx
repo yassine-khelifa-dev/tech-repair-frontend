@@ -1,5 +1,6 @@
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
 import { Link } from "react-router-dom";
+import { ROUTES } from "../routes/ROUTES";
 
 export default function RepairRequestSuccess() {
   return (
@@ -47,14 +48,14 @@ export default function RepairRequestSuccess() {
 
         <div className="flex justify-center gap-4">
           <Link
-            to="/"
+            to={ROUTES.HOME}
             className="px-6 py-3 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition"
           >
             Back to Home
           </Link>
 
           <Link
-            to="/repair-request"
+            to={ROUTES.HOME}
             className="px-6 py-3 rounded-lg border border-slate-300 text-slate-700 font-medium hover:bg-slate-50 transition"
           >
             New Request
