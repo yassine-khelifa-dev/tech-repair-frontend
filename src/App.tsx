@@ -1,10 +1,14 @@
-
+import { RepairRequestForm } from "./components/repair/RepairRequestForm";
 
 function App() {
   return (
-    <div>
-      <h1>Repair Flow</h1>
-    </div>
+    <>
+      <div className="m-5">
+        <h1 className="text-blue-600 text-6xl mb-8">Repair Flow</h1>
+
+        <RepairRequestForm />
+      </div>
+    </>
   );
 }
 
