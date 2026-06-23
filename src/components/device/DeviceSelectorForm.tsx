@@ -46,7 +46,7 @@ function DeviceSelectorForm({ onModelChange }: Props) {
   }
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+    <div className="w-full space-y-6 rounded-2xl border border-gray-800  bg-black p-6 shadow-sm"> 
       <DeviceTypeForm onDeviceTypeChange={handleDeviceTypeChange} />
 
       {deviceTypeId !== null && (

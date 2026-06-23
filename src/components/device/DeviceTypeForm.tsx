@@ -23,7 +23,7 @@ export default function DeviceTypeForm({ onDeviceTypeChange }: Props) {
     <div>
       <label
         htmlFor="deviceType"
-        className="mb-2 block text-sm font-semibold text-gray-700"
+        className="mb-2 block text-sm font-semibold"
       >
         Device type
       </label>

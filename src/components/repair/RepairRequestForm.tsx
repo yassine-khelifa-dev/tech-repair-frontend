@@ -7,7 +7,8 @@ import {
 import createRepairRequest from "../../services/RepairRequestService";
 import DeviceSelectorForm from "../device/DeviceSelectorForm";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { ROUTES } from "../../routes/ROUTES";
 
 export function RepairRequestForm() {
   const {
@@ -59,165 +60,167 @@ export function RepairRequestForm() {
   }
 
   return (
-    <form
-      onSubmit={handleSubmit(submit)}
-      className="mx-auto max-w-4xl space-y-6 p-6"
-    >
-      {serverError && (
-        <div className="rounded-lg bg-red-100 p-3 text-red-700">
-          {serverError}
+    <div className="min-h-screen bg-black px-6 py-16 text-white">
+      <div className="mx-auto max-w-5xl">
+        <div className="mb-10 flex items-center justify-between">
+          <div>
+            <span className="inline-flex rounded-full border border-blue-800 px-5 py-2 text-sm font-medium text-blue-400">
+              Seven Tech Repair Center
+            </span>
+
+            <h1 className="mt-6 text-5xl font-bold text-white">
+              Repair request
+            </h1>
+
+            <p className="mt-3 text-lg text-gray-400">
+              Fill in your device information and we will review your request.
+            </p>
+          </div>
+
+          <Link
+            to={ROUTES.HOME}
+            className="rounded-xl border border-gray-700 px-5 py-2.5 text-sm font-semibold text-gray-300 transition hover:border-blue-500 hover:text-white"
+          >
+            Back home
+          </Link>
         </div>
-      )}
 
-      {success && (
-        <div className="rounded-lg bg-green-100 p-3 text-green-700">
-          Repair request sent successfully.
-        </div>
-      )}
-
-      <DeviceSelectorForm
-        onModelChange={(modelId, optionIds) => {
-          setValue("device_model_id", modelId ?? -1, {
-            shouldValidate: true,
-            shouldDirty: true,
-            shouldTouch: true,
-          });
-
-          setValue("option_ids", optionIds, {
-            shouldValidate: true,
-            shouldDirty: true,
-            shouldTouch: true,
-          });
-        }}
-      />
-
-      {errors.device_model_id && (
-        <p className="text-sm text-red-500">{errors.device_model_id.message}</p>
-      )}
-
-      {errors.option_ids && (
-        <p className="text-sm text-red-500">{errors.option_ids.message}</p>
-      )}
-
-      <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-        <div>
-          <label className="mb-2 block text-sm font-semibold text-gray-700">
-            Full name
-          </label>
-          <input
-            type="text"
-            {...register("fullname")}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2"
-          />
-          {errors.fullname && (
-            <p className="text-sm text-red-500">{errors.fullname.message}</p>
+        <form
+          onSubmit={handleSubmit(submit)}
+          className="space-y-8 rounded-3xl border border-gray-800 bg-neutral-950 p-8 shadow-2xl"
+        >
+          {serverError && (
+            <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-400">
+              {serverError}
+            </div>
           )}
-        </div>
 
-        <div>
-          <label className="mb-2 block text-sm font-semibold text-gray-700">
-            Email
-          </label>
-          <input
-            type="email"
-            {...register("email")}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2"
-          />
-          {errors.email && (
-            <p className="text-sm text-red-500">{errors.email.message}</p>
-          )}
-        </div>
-
-        <div>
-          <label className="mb-2 block text-sm font-semibold text-gray-700">
-            Phone
-          </label>
-          <input
-            type="text"
-            {...register("phone")}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2"
-          />
-          {errors.phone && (
-            <p className="text-sm text-red-500">{errors.phone.message}</p>
-          )}
-        </div>
-
-        <div>
-          <label className="mb-2 block text-sm font-semibold text-gray-700">
-            IMEI
-          </label>
-          <input
-            type="text"
-            {...register("imei")}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2"
-          />
-          {errors.imei && (
-            <p className="text-sm text-red-500">{errors.imei.message}</p>
-          )}
-        </div>
-
-        <div>
-          <label className="mb-2 block text-sm font-semibold text-gray-700">
-            Serial number
-          </label>
-          <input
-            type="text"
-            {...register("sn")}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2"
-          />
-          {errors.sn && (
-            <p className="text-sm text-red-500">{errors.sn.message}</p>
-          )}
-        </div>
-
-        <div>
-          <label className="mb-2 block text-sm font-semibold text-gray-700">
-            Device images
-          </label>
-          <input
-            type="file"
-            multiple
-            accept="image/*"
-            onChange={(e) => {
-              const files = Array.from(e.target.files ?? []);
-              setValue("images_device", files, {
+          <DeviceSelectorForm
+            onModelChange={(modelId, optionIds) => {
+              setValue("device_model_id", modelId ?? null, {
                 shouldValidate: true,
                 shouldDirty: true,
+                shouldTouch: true,
+              });
+
+              setValue("option_ids", optionIds, {
+                shouldValidate: true,
+                shouldDirty: true,
+                shouldTouch: true,
               });
             }}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2"
           />
-          {errors.images_device && (
-            <p className="text-sm text-red-500">
-              {errors.images_device.message}
+
+          {errors.device_model_id && (
+            <p className="text-sm text-red-400">
+              {errors.device_model_id.message}
             </p>
           )}
-        </div>
-      </div>
 
-      <div>
-        <label className="mb-2 block text-sm font-semibold text-gray-700">
-          Issue description
-        </label>
-        <textarea
-          {...register("issue_description")}
-          rows={4}
-          className="w-full rounded-lg border border-gray-300 px-3 py-2"
-        />
-        {errors.issue_description && (
-          <p className="text-sm text-red-500">
-            {errors.issue_description.message}
-          </p>
-        )}
-      </div>
+          {errors.option_ids && (
+            <p className="text-sm text-red-400">{errors.option_ids.message}</p>
+          )}
 
-      <button
-        type="submit"
-        disabled={loading}
-        className="bg-black text-white px-4 py-2 rounded disabled:opacity-50"
-      >
-        {loading ? "Sending..." : "Send repair request"}
-      </button>
-    </form>
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+            {[
+              ["Full name", "fullname", "text"],
+              ["Email", "email", "email"],
+              ["Phone", "phone", "text"],
+              ["IMEI", "imei", "text"],
+              ["Serial number", "sn", "text"],
+            ].map(([label, name, type]) => (
+              <div key={name}>
+                <label className="mb-2 block text-sm font-semibold text-gray-300">
+                  {label}
+                </label>
+
+                <input
+                  type={type}
+                  {...register(name as keyof RepairRequestFormData)}
+                  className="w-full rounded-xl border border-gray-700 bg-black px-4 py-3 text-white outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                />
+
+                {errors[name as keyof RepairRequestFormData] && (
+                  <p className="mt-1 text-sm text-red-400">
+                    {
+                      errors[name as keyof RepairRequestFormData]
+                        ?.message as string
+                    }
+                  </p>
+                )}
+              </div>
+            ))}
+
+            <div>
+              <label className="mb-2 block text-sm font-semibold text-gray-300">
+                Device images
+              </label>
+
+              <input
+                type="file"
+                multiple
+                accept="image/*"
+                onChange={(e) => {
+                  const files = Array.from(e.target.files ?? []);
+                  setValue("images_device", files, {
+                    shouldValidate: true,
+                    shouldDirty: true,
+                  });
+                }}
+                className="w-full rounded-xl border border-gray-700 bg-black px-4 py-3 text-white file:mr-4 file:rounded-lg file:border-0 file:bg-blue-600 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="mb-2 block text-sm font-semibold text-gray-300">
+              Issue description
+            </label>
+
+            <textarea
+              {...register("issue_description")}
+              rows={5}
+              className="w-full rounded-xl border border-gray-700 bg-black px-4 py-3 text-white outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+            />
+
+            {errors.issue_description && (
+              <p className="mt-1 text-sm text-red-400">
+                {errors.issue_description.message}
+              </p>
+            )}
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="inline-flex items-center justify-center gap-3 rounded-xl bg-blue-600 px-8 py-4 text-sm font-bold text-white shadow-lg shadow-blue-600/30 transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {loading ? (
+              <>
+                <span className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                Sending...
+              </>
+            ) : (
+              <>
+                <svg
+                  className="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 12 3 21l18-9L3 3l3 9Zm0 0h7"
+                  />
+                </svg>
+                Send repair request
+              </>
+            )}
+          </button>
+        </form>
+      </div>
+    </div>
   );
 }

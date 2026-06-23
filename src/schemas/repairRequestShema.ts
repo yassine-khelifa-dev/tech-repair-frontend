@@ -23,6 +23,8 @@ export const repairRequestSchema = z.object({
 
   device_model_id: z.number().int("Device model is required"),
 
+  
+
   option_ids: z.array(z.number()).min(1, "Select at least one option"),
 
   images_device: z.array(z.instanceof(File)).optional(),

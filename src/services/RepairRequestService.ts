@@ -18,7 +18,7 @@ async function createRepairRequest(data: RepairRequestFormData) {
     formData.append("option_ids[]", String(id));
   });
 
-  data.images_device.forEach((file) => {
+  data.images_device?.forEach((file) => {
     formData.append("images_device[]", file);
   });
 
@@ -28,7 +28,9 @@ async function createRepairRequest(data: RepairRequestFormData) {
     },
   });
 
-  console.log(response.data);
+  return response.data;
+
+  //console.log(response.data);
 }
 
 export default createRepairRequest;

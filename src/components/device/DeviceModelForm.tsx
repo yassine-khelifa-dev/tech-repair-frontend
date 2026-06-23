@@ -39,7 +39,7 @@ export default function DeviceModelForm({
     <div>
       <label
         htmlFor="deviceModel"
-        className="mb-2 block text-sm font-semibold text-gray-700"
+        className="mb-2 block text-sm font-semibold  "
       >
         Device model
       </label>

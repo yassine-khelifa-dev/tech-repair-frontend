@@ -21,7 +21,7 @@ export default function BrandForm({ onBrandChange }: Props) {
       <div>
         <label
           htmlFor="brand"
-          className="mb-2 block text-sm font-semibold text-gray-700"
+          className="mb-2 block text-sm font-semibold text-white"
         >
           Brand
         </label>
