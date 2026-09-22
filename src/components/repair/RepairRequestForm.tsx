@@ -16,18 +16,20 @@ export function RepairRequestForm() {
   const {
     register,
     handleSubmit,
+    setError,
     setValue,
     reset,
-    formState: { errors },
+    formState: { errors, submitCount, touchedFields },
   } = useForm<RepairRequestFormInput, unknown, RepairRequestFormData>({
     resolver: zodResolver(repairRequestSchema),
     defaultValues: {
-      fullname: "",
+      fullname: "Marco Rossi",
       email: "",
-      phone: "",
-      imei: "",
-      sn: "",
-      issue_description: "",
+      phone: "3331234567",
+      imei: "356789012345678",
+      sn: "SNDEMO2026",
+      issue_description:
+        "Buongiorno, ho un problema con il mio dispositivo: si riavvia da solo ogni cinque minuti. Vorrei sapere se potete controllarlo e fissare un appuntamento per la riparazione.",
       device_model_id: null,
       option_ids: [],
       images_device: [],
@@ -48,6 +50,17 @@ export function RepairRequestForm() {
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 422) {
         const message = error.response.data?.message ?? "Invalid repair request";
+        const fieldErrors = error.response.data?.errors ?? {};
+
+        Object.entries(fieldErrors).forEach(([field, messages]) => {
+          const firstMessage = Array.isArray(messages) ? messages[0] : message;
+
+          setError(field as keyof RepairRequestFormInput, {
+            type: "server",
+            message: String(firstMessage),
+          });
+        });
+
         setServerError(message);
         console.error(message);
         return;
@@ -66,7 +79,7 @@ export function RepairRequestForm() {
         <div className="mb-10 flex items-center justify-between">
           <div>
             <span className="inline-flex rounded-full border border-blue-800 px-5 py-2 text-sm font-medium text-blue-400">
-              Seven Tech Repair Center
+              Tech Repair Center
             </span>
 
             <h1 className="mt-6 text-5xl font-bold text-white">
@@ -99,37 +112,37 @@ export function RepairRequestForm() {
           <DeviceSelectorForm
             onModelChange={(modelId, optionIds) => {
               setValue("device_model_id", modelId ?? null, {
-                shouldValidate: true,
+                shouldValidate: false,
                 shouldDirty: true,
                 shouldTouch: true,
               });
 
               setValue("option_ids", optionIds, {
-                shouldValidate: true,
+                shouldValidate: false,
                 shouldDirty: true,
                 shouldTouch: true,
               });
             }}
           />
 
-          {errors.device_model_id && (
+          {errors.device_model_id && submitCount > 0 && (
             <p className="text-sm text-red-400">
               {errors.device_model_id.message}
             </p>
           )}
 
-          {errors.option_ids && (
+          {errors.option_ids && submitCount > 0 && (
             <p className="text-sm text-red-400">{errors.option_ids.message}</p>
           )}
 
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
             {[
-              ["Full name", "fullname", "text"],
-              ["Email", "email", "email"],
-              ["Phone", "phone", "text"],
-              ["IMEI", "imei", "text"],
-              ["Serial number", "sn", "text"],
-            ].map(([label, name, type]) => (
+              ["Full name", "fullname", "text", "Marco Rossi"],
+              ["Email", "email", "email", "@repair.com"],
+              ["Phone", "phone", "text", "3331234567"],
+              ["IMEI", "imei", "text", "356789012345678"],
+              ["Serial number", "sn", "text", "SNDEMO2026"],
+            ].map(([label, name, type, placeholder]) => (
               <div key={name}>
                 <label className="mb-2 block text-sm font-semibold text-gray-300">
                   {label}
@@ -137,18 +150,21 @@ export function RepairRequestForm() {
 
                 <input
                   type={type}
+                  placeholder={placeholder}
                   {...register(name as keyof RepairRequestFormData)}
                   className="w-full rounded-xl border border-gray-700 bg-black px-4 py-3 text-white outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
                 />
 
-                {errors[name as keyof RepairRequestFormData] && (
-                  <p className="mt-1 text-sm text-red-400">
-                    {
-                      errors[name as keyof RepairRequestFormData]
-                        ?.message as string
-                    }
-                  </p>
-                )}
+                {errors[name as keyof RepairRequestFormData] &&
+                  (submitCount > 0 ||
+                    touchedFields[name as keyof RepairRequestFormInput]) && (
+                    <p className="mt-1 text-sm text-red-400">
+                      {
+                        errors[name as keyof RepairRequestFormData]
+                          ?.message as string
+                      }
+                    </p>
+                  )}
               </div>
             ))}
 
@@ -181,14 +197,16 @@ export function RepairRequestForm() {
             <textarea
               {...register("issue_description")}
               rows={5}
+              placeholder="Buongiorno, il dispositivo si riavvia ogni cinque minuti. Vorrei fissare un appuntamento per controllarlo."
               className="w-full rounded-xl border border-gray-700 bg-black px-4 py-3 text-white outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
             />
 
-            {errors.issue_description && (
-              <p className="mt-1 text-sm text-red-400">
-                {errors.issue_description.message}
-              </p>
-            )}
+            {errors.issue_description &&
+              (submitCount > 0 || touchedFields.issue_description) && (
+                <p className="mt-1 text-sm text-red-400">
+                  {errors.issue_description.message}
+                </p>
+              )}
           </div>
 
           <button
