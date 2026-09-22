@@ -1,73 +1,120 @@
-# React + TypeScript + Vite
+# Tech Repair Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Tech Repair Frontend is the customer-facing React application for submitting repair requests. It connects to the Laravel backend, loads the device catalog dynamically, and lets customers describe a repair issue with the correct device model and supported specification options.
 
-Currently, two official plugins are available:
+The frontend is intentionally separated from the backend repository. The Laravel backend manages the admin workflow, database, API, model configuration, repair requests, tickets, and notifications. This React app focuses on the public customer experience.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Project Links
 
-## React Compiler
+- Frontend repository: https://github.com/yassine-khelifa-dev/tech-repair-frontend
+- Backend repository: https://github.com/yassine-khelifa-dev/tech-repair
+- Customer request app: https://repair-request.eprostam.com
+- Backend/admin app: https://tech-repair.eprostam.com
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Stack
 
-## Expanding the ESLint configuration
+- React
+- TypeScript
+- Vite
+- React Router
+- React Hook Form
+- Zod
+- Axios
+- Tailwind CSS
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## What The Frontend Does
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+The repair request form is driven by the backend catalog.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+The customer flow is:
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+1. Select a device category.
+2. Select a brand.
+3. Select a device model.
+4. Load the attributes and options allowed for that selected model.
+5. Fill in customer information.
+6. Add device identifiers and issue description.
+7. Upload optional device images.
+8. Submit the repair request to the Laravel API.
+
+The important part is that the frontend does not hardcode options like colors, RAM, or storage. Those values come from the backend. If a model only supports selected options, the form only displays those options.
+
+## API Connection
+
+The production API base URL is configured with:
+
+```env
+VITE_API_BASE_URL=https://tech-repair.eprostam.com/api
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+The Axios client is defined in:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```text
+src/api/axios.ts
 ```
+
+## Routes
+
+```text
+/                         Home page
+/repair-request           Repair request form
+/repair-request/success   Success confirmation
+```
+
+## Local Installation
+
+```bash
+npm install
+npm run dev
+```
+
+For local backend development, create a local environment file:
+
+```env
+VITE_API_BASE_URL=http://127.0.0.1:8000/api
+```
+
+Then start the Laravel backend locally:
+
+```bash
+php artisan serve
+```
+
+## Production Build
+
+```bash
+npm run build
+```
+
+The build output is generated in:
+
+```text
+dist/
+```
+
+Because the current Hostinger server does not provide `npm`, the production build is generated locally and the `dist` folder is committed when needed.
+
+## Hostinger Deployment
+
+The frontend is deployed under:
+
+```text
+/home/u384905436/domains/eprostam.com/public_html/repair-request
+```
+
+After pushing changes to GitHub, update the server with:
+
+```bash
+cd /home/u384905436/domains/eprostam.com/public_html/repair-request
+git pull origin main
+```
+
+If the domain cannot point directly to `dist`, use an `.htaccess` file in the project root to route requests to the built app.
+
+## Related Backend
+
+The Laravel backend repository is:
+
+https://github.com/yassine-khelifa-dev/tech-repair
+
+The backend provides the catalog API, repair request endpoint, admin dashboard, repair ticket workflow, notifications, and dynamic model configuration.
