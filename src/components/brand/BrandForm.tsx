@@ -3,7 +3,7 @@ import type { TBrand } from "../../types/TBrand";
 import getBrands from "../../services/BrandService";
 
 type Props = {
-  onBrandChange: (number) => void;
+  onBrandChange: (brandId: number | null) => void;
 };
 
 export default function BrandForm({ onBrandChange }: Props) {

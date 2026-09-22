@@ -13,13 +13,11 @@ function DeviceSelectorForm({ onModelChange }: Props) {
   const [deviceTypeId, setDeviceTypeId] = useState<number | null>(null);
   const [brandId, setBrandId] = useState<number | null>(null);
   const [deviceModelId, setDeviceModelId] = useState<number | null>(null);
-  const [optionIds, setOptionIds] = useState<number[]>([]);
 
   function handleDeviceTypeChange(id: number | null) {
     setDeviceTypeId(id);
     setBrandId(null);
     setDeviceModelId(null);
-    setOptionIds([]);
 
     onModelChange(null, []);
   }
@@ -27,21 +25,17 @@ function DeviceSelectorForm({ onModelChange }: Props) {
   function handleBrandChange(id: number | null) {
     setBrandId(id);
     setDeviceModelId(null);
-    setOptionIds([]);
 
     onModelChange(null, []);
   }
 
   function handleDeviceModelChange(id: number | null) {
     setDeviceModelId(id);
-    setOptionIds([]);
 
     onModelChange(id, []);
   }
 
   function handleOptionsChange(ids: number[]) {
-    setOptionIds(ids);
-
     onModelChange(deviceModelId, ids);
   }
 

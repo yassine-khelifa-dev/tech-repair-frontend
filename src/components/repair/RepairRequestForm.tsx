@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   repairRequestSchema,
+  type RepairRequestFormInput,
   type RepairRequestFormData,
 } from "../../schemas/repairRequestShema";
 import createRepairRequest from "../../services/RepairRequestService";
@@ -9,6 +10,7 @@ import DeviceSelectorForm from "../device/DeviceSelectorForm";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ROUTES } from "../../routes/ROUTES";
+import axios from "axios";
 
 export function RepairRequestForm() {
   const {
@@ -17,7 +19,7 @@ export function RepairRequestForm() {
     setValue,
     reset,
     formState: { errors },
-  } = useForm<RepairRequestFormData>({
+  } = useForm<RepairRequestFormInput, unknown, RepairRequestFormData>({
     resolver: zodResolver(repairRequestSchema),
     defaultValues: {
       fullname: "",
@@ -34,7 +36,6 @@ export function RepairRequestForm() {
 
   const [loading, setLoading] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
 
   async function submit(data: RepairRequestFormData) {
@@ -43,12 +44,12 @@ export function RepairRequestForm() {
       setServerError(null);
       await createRepairRequest(data);
       reset();
-      setSuccess(true);
       navigate("/repair-request/success");
     } catch (error) {
-      if (error.response?.status === 422) {
-        setServerError(error.response.data.message);
-        console.error(error.response.data.message);
+      if (axios.isAxiosError(error) && error.response?.status === 422) {
+        const message = error.response.data?.message ?? "Invalid repair request";
+        setServerError(message);
+        console.error(message);
         return;
       }
 

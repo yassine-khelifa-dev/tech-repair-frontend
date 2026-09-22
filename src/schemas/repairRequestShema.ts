@@ -21,7 +21,13 @@ export const repairRequestSchema = z.object({
     .string()
     .min(5, "Description must contain at least 5 characters"),
 
-  device_model_id: z.number().int("Device model is required"),
+  device_model_id: z
+    .number()
+    .int("Device model is required")
+    .nullable()
+    .refine((value): value is number => value !== null, {
+      message: "Device model is required",
+    }),
 
   
 
@@ -30,4 +36,5 @@ export const repairRequestSchema = z.object({
   images_device: z.array(z.instanceof(File)).optional(),
 });
 
-export type RepairRequestFormData = z.infer<typeof repairRequestSchema>;
+export type RepairRequestFormInput = z.input<typeof repairRequestSchema>;
+export type RepairRequestFormData = z.output<typeof repairRequestSchema>;
