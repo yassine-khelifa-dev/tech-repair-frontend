@@ -8,8 +8,8 @@ The frontend is intentionally separated from the backend repository. The Laravel
 
 - Frontend repository: https://github.com/yassine-khelifa-dev/tech-repair-frontend
 - Backend repository: https://github.com/yassine-khelifa-dev/tech-repair
-- Customer request app: https://repair-request.eprostam.com
-- Backend/admin app: https://tech-repair.eprostam.com
+
+The deployed frontend and backend URLs are configured outside the repository. Server paths, domains, credentials, and deployment-specific details should not be committed.
 
 ## Stack
 
@@ -44,7 +44,7 @@ The important part is that the frontend does not hardcode options like colors, R
 The production API base URL is configured with:
 
 ```env
-VITE_API_BASE_URL=https://tech-repair.eprostam.com/api
+VITE_API_BASE_URL=https://your-backend-domain.example/api
 ```
 
 The Axios client is defined in:
@@ -92,24 +92,17 @@ The build output is generated in:
 dist/
 ```
 
-Because the current Hostinger server does not provide `npm`, the production build is generated locally and the `dist` folder is committed when needed.
+When the hosting environment cannot run Node.js, the production build can be generated locally and the `dist` folder can be committed when needed.
 
-## Hostinger Deployment
+## Deployment Notes
 
-The frontend is deployed under:
-
-```text
-/home/u384905436/domains/eprostam.com/public_html/repair-request
-```
-
-After pushing changes to GitHub, update the server with:
+Build the frontend locally, commit the generated `dist` files when the hosting environment cannot run Node.js, then update the deployment directory from Git:
 
 ```bash
-cd /home/u384905436/domains/eprostam.com/public_html/repair-request
 git pull origin main
 ```
 
-If the domain cannot point directly to `dist`, use an `.htaccess` file in the project root to route requests to the built app.
+If the web root cannot point directly to `dist`, use the hosting configuration or an `.htaccess` file to route requests to the built app.
 
 ## Related Backend
 
