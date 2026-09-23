@@ -17,8 +17,7 @@ export default function AttributeOptionForm({
   >({});
 
   const [visib, setVisib] = useState<boolean>(true);
-  const sectionRef =
-   useRef<HTMLDivElement | null>(null);
+  const sectionRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     async function loadAttributes() {
@@ -76,8 +75,9 @@ export default function AttributeOptionForm({
           <div>
             <h3 className="text-lg font-semibold text-white">Specifications</h3>
             <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-400">
-              These options are optional. Select only the characteristics you
-              want to include with this repair request.
+              These specifications are optional, but choose at least one option
+              before sending the request. Select only the characteristics you
+              want to include.
             </p>
           </div>
 

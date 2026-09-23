@@ -165,6 +165,14 @@ export function RepairRequestForm() {
                       }
                     </p>
                   )}
+
+                {name === "email" && (
+                  <p className="mt-2 rounded-lg border border-amber-400/20 bg-amber-400/10 px-3 py-2 text-xs leading-5 text-amber-100/90">
+                    Demo note: customer emails are not sent to this address for
+                    now. Notifications are temporarily routed to the admin
+                    mailbox.
+                  </p>
+                )}
               </div>
             ))}
 
